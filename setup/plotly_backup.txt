@@ -1,0 +1,30 @@
+# PLOTLY graphics for reference
+
+#import plotly
+#plotly.tools.set_credentials_file(username='rhyswhitley', api_key='5ctzd8i48r')
+
+import plotly.plotly as py
+import plotly.graph_objs as go
+
+r_depth = soil_df.depth.values
+rd_surf = 11000
+rb_total = 1930
+
+# test
+rdens_list = np.linspace(5e3, 15e3, 11)
+rbm = [get_root_dist(rb_total, rd, soil_depth) for rd in rdens_list]
+rdn = np.array(rbm)/np.array(soil_thick)
+rfr = np.array(rdn)/rb_total
+
+plotly_ln = lambda x, y, lab: go.Scatter(x=x, y=y, mode='lines', name=lab)
+
+data = [plotly_ln(rb, soil_depth[:-1], rd) for (rb, rd) in zip(rbm, rdens_list)]
+
+#Plot and embed in ipython notebook!
+layout = go.Layout(
+    yaxis=dict(
+        autorange='reversed'
+    )
+)
+fig = go.Figure(data=data, layout=layout)
+py.iplot(fig, filename='line-mode')
